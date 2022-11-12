@@ -1,23 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import TaskForm from "./TaskForm";
+import Task from "./Task";
+import React, { useState, useEffect } from "react";
+import logo from "./img/logo.png";
 
 function App() {
+  const initialState = JSON.parse(localStorage.getItem("todos")) || [];
+  const [input, setInput] = useState("");
+  const [todos, setTodos] = useState(initialState);
+  const [editTodo, setEditTodo] = useState([]);
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  const completedTask = todos.filter((todos) => todos.completed).length;
+  const totalTask = todos.length;
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <img src={logo} alt="logo" className="logo" />
+      <h2>
+        {totalTask ? `${completedTask}/${totalTask} Complete`:"" }<br />
+        {completedTask === totalTask && totalTask > 0 ? "Good Job🙌" : ""}
+      </h2>
+      <TaskForm
+        input={input}
+        setInput={setInput}
+        todos={todos}
+        setTodos={setTodos}
+        setEditTodo={setEditTodo}
+        editTodo={editTodo}
+      />
+      <Task todos={todos} setTodos={setTodos} setEditTodo={setEditTodo} />
     </div>
   );
 }
